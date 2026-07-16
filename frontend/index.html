@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI | AI-Powered Career Platform</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/animation.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <!-- CDNs -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+    <!-- Ambient Animated Background Grid & Lava Blobs -->
+    <div class="perspective-grid"></div>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <!-- Header Navigation -->
+    <header class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="/assets/images/eduai_premium_logo.png" alt="EduAI Logo" onerror="this.style.display='none'">
+                <span>EduAI.</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#testimonials">Stories</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <!-- Theme toggle button on landing page -->
+                <button id="landing-theme-toggle" class="btn-secondary" style="padding: 10px; width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: none; cursor: pointer; transition: var(--transition);">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <a href="/login" class="btn-secondary" id="login-nav-btn">Sign In</a>
+                <a href="/login?tab=signup" class="btn-primary" id="signup-nav-btn">Start Free 🚀</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="container hero-section" style="padding: 100px 0; display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;" id="hero-parallax-container">
+        <div class="hero-left" data-aos="fade-right">
+            <span style="background: rgba(59, 130, 246, 0.08); color: var(--primary-blue); font-size: 13px; font-weight: 700; text-transform: uppercase; padding: 6px 14px; border-radius: 50px; display: inline-block; margin-bottom: 24px; border: 1px solid rgba(59, 130, 246, 0.15);">🤖 AI-Powered Career Platform</span>
+            <h1 style="font-size: 56px; line-height: 1.1; margin-bottom: 20px; font-weight: 900; letter-spacing: -0.02em;">
+                Discover the <span class="gradient-text shimmer-text" id="typewriter-headline">Right Career Path</span> For You.
+            </h1>
+            <p style="font-size: 18px; color: var(--text-secondary); margin-bottom: 36px; max-width: 500px;">
+                Personalized AI-powered guidance to help you navigate skills, colleges, ATS resume scans, and your dream tech job.
+            </p>
+            <div style="display: flex; gap: 16px;">
+                <a href="/login" class="btn-primary pulse-btn">Get Started Now 🚀</a>
+                <a href="#features" class="btn-secondary">Explore Features</a>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 24px; font-weight: 500;">
+                ✔ No credit card required &nbsp;&nbsp;&nbsp; ✔ Complete ATS Optimization &nbsp;&nbsp;&nbsp; ✔ AI Roadmap Blueprints
+            </p>
+        </div>
+        <div class="hero-right" data-aos="fade-left" style="position: relative;">
+            <div style="width: 100%; border-radius: var(--radius-lg); background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--border-color); padding: 12px; box-shadow: var(--shadow-lg); transition: var(--transition);" class="parallax-element">
+                <img src="/assets/images/hero.png" alt="EduAI Career Guidance illustration" style="width: 100%; height: auto; border-radius: var(--radius-md); display: block;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="container" style="padding: 100px 0;">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto 64px auto;" data-aos="fade-up">
+            <h2 style="font-size: 38px; margin-bottom: 16px;">Accelerate Your Professional Journey</h2>
+            <p style="color: var(--text-secondary);">Everything you need to build your skills, optimize your CV, and secure placements.</p>
+        </div>
+        <div class="grid-3">
+            <!-- Feature 1 -->
+            <div class="glass-card glow-card" data-aos="fade-up" data-aos-delay="100">
+                <div style="font-size: 32px; color: var(--primary-blue); margin-bottom: 20px;"><i class="fa-solid fa-brain"></i></div>
+                <h3 style="margin-bottom: 12px; font-size: 20px;">AI Career Mentor</h3>
+                <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">
+                    Chat with your 24/7 AI coach. Get personalized recommendations on interview preparation, system design, and coding.
+                </p>
+            </div>
+            <!-- Feature 2 -->
+            <div class="glass-card glow-card" data-aos="fade-up" data-aos-delay="200">
+                <div style="font-size: 32px; color: var(--accent-purple); margin-bottom: 20px;"><i class="fa-solid fa-file-invoice"></i></div>
+                <h3 style="margin-bottom: 12px; font-size: 20px;">Resume X-Ray (ATS)</h3>
+                <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">
+                    Upload your CV to calculate your ATS match score, detect critical keyword gaps, and generate optimized resume templates.
+                </p>
+            </div>
+            <!-- Feature 3 -->
+            <div class="glass-card glow-card" data-aos="fade-up" data-aos-delay="300">
+                <div style="font-size: 32px; color: var(--success); margin-bottom: 20px;"><i class="fa-solid fa-graduation-cap"></i></div>
+                <h3 style="margin-bottom: 12px; font-size: 20px;">College Finder & roadmaps</h3>
+                <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">
+                    Find target colleges matching your course selections and download visual 4-year academic blueprints.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="container" style="padding: 100px 0; border-top: 1px solid var(--border-color);">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto 64px auto;" data-aos="fade-up">
+            <h2 style="font-size: 38px; margin-bottom: 16px;">How It Works</h2>
+            <p style="color: var(--text-secondary);">Simple, structured steps to elevate your career opportunities.</p>
+        </div>
+        <div class="grid-2" style="align-items: center;">
+            <div data-aos="fade-right">
+                <div style="display: flex; gap: 24px; margin-bottom: 32px;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-gradient); color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; flex-shrink: 0;">1</div>
+                    <div>
+                        <h3 style="margin-bottom: 8px;">Create Profile</h3>
+                        <p>Configure your academic background, target roles, and learning targets.</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 24px; margin-bottom: 32px;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent-gradient); color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; flex-shrink: 0;">2</div>
+                    <div>
+                        <h3 style="margin-bottom: 8px;">AI Resume Scan</h3>
+                        <p>Upload your PDF resume. Our parser highlights missing keywords and format gaps.</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 24px;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--combined-gradient); color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; flex-shrink: 0;">3</div>
+                    <div>
+                        <h3 style="margin-bottom: 8px;">Follow Roadmap</h3>
+                        <p>Learn missing skills via personalized roadmaps and download an optimized ATS resume.</p>
+                    </div>
+                </div>
+            </div>
+            <div data-aos="fade-left" style="background-color: var(--bg-primary); padding: 40px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-md);">
+                <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-chart-line" style="color: var(--primary-blue); margin-right: 8px;"></i> Talent Analytics</h3>
+                <p style="margin-bottom: 24px; font-size: 14px;">EduAI integrates live tech market size projections (2026-2030) so you always acquire trending skills.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background-color: var(--bg-secondary); border-radius: var(--radius-md); margin-bottom: 12px;">
+                    <span style="font-weight: 700;">AI & ML Demand Forecast</span>
+                    <span style="font-weight: bold; color: var(--success);">+142% CAGR</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background-color: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <span style="font-weight: 700;">Cybersecurity Specialists</span>
+                    <span style="font-weight: bold; color: var(--primary-blue);">+88% CAGR</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="container" style="padding: 100px 0; border-top: 1px solid var(--border-color);">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto 64px auto;" data-aos="fade-up">
+            <h2 style="font-size: 38px; margin-bottom: 16px;">Student Success Stories</h2>
+            <p style="color: var(--text-secondary);">Read how students secured jobs at top tech giants using EduAI.</p>
+        </div>
+        <div class="grid-2">
+            <div class="glass-card" data-aos="fade-right" style="border-left: 4px solid var(--primary-blue);">
+                <p style="font-style: italic; margin-bottom: 20px; font-size: 16px; line-height: 1.6;">
+                    "EduAI mentor guided me to transition from general Web Development into Machine Learning inside 6 months! The roadmaps were extremely precise."
+                </p>
+                <h4 style="margin-bottom: 2px;">Rahul Sharma</h4>
+                <small style="color: var(--primary-blue); font-weight: 700;">AI Engineer at Google</small>
+            </div>
+            <div class="glass-card" data-aos="fade-left" style="border-left: 4px solid var(--accent-purple);">
+                <p style="font-style: italic; margin-bottom: 20px; font-size: 16px; line-height: 1.6;">
+                    "The Resume X-Ray feedback was extremely precise. My ATS success rate jumped significantly after revising the keywords to match the target job roles."
+                </p>
+                <h4 style="margin-bottom: 2px;">Sneha Patel</h4>
+                <small style="color: var(--accent-purple); font-weight: 700;">Data Scientist at Amazon</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Footer -->
+    <footer id="contact" style="background-color: var(--bg-primary); border-top: 1px solid var(--border-color); padding: 80px 0 40px 0;">
+        <div class="container" style="display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; margin-bottom: 60px;">
+            <div>
+                <div class="logo" style="margin-bottom: 16px;">
+                    <img src="/assets/images/eduai_premium_logo.png" alt="EduAI Logo" onerror="this.style.display='none'">
+                    <span>EduAI.</span>
+                </div>
+                <p style="font-size: 14px; color: var(--text-secondary); max-width: 320px;">
+                    Advanced AI-powered guidance co-pilot for the modern student and tech professional.
+                </p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 16px;">Resources</h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="/login">Auth Portal</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 16px;">Contact</h4>
+                <p style="font-size: 14px; margin-bottom: 10px;"><i class="fa-solid fa-envelope" style="margin-right: 8px; color: var(--primary-blue);"></i> support@eduai.co</p>
+                <p style="font-size: 14px;"><i class="fa-solid fa-location-dot" style="margin-right: 8px; color: var(--primary-blue);"></i> San Francisco, CA</p>
+            </div>
+        </div>
+        <div class="container" style="border-top: 1px solid var(--border-color); padding-top: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <p style="font-size: 13px; color: var(--text-muted);">&copy; 2026 EduAI Career Intelligence Platform. All rights reserved.</p>
+            <div style="display: flex; gap: 20px; font-size: 18px; color: var(--text-muted);">
+                <a href="#"><i class="fa-brands fa-github"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/animation.js"></script>
+    
+    <script>
+        // Set up typewriter and parallax animations on landing page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Typewriter effect
+            setTimeout(() => {
+                Animations.typewriter('typewriter-headline', 'Right Career Path', 0.1);
+            }, 300);
+
+            // Mouse parallax movement
+            Animations.setupMouseParallax('#hero-parallax-container', '.parallax-element', 0.04);
+            
+            // Check if logged in to replace navigation buttons with Dashboard
+            Api.getSession().then(session => {
+                if (session.logged_in) {
+                    const btn1 = document.getElementById('login-nav-btn');
+                    const btn2 = document.getElementById('signup-nav-btn');
+                    if (btn1 && btn2) {
+                        btn1.style.display = 'none';
+                        btn2.textContent = 'Go to Dashboard ➡️';
+                        btn2.href = '/dashboard';
+                    }
+                }
+            }).catch(() => {});
+
+            // Theme switch binding on landing page navbar
+            const themeBtn = document.getElementById('landing-theme-toggle');
+            if (themeBtn) {
+                const themeIcon = themeBtn.querySelector('i');
+                const currentTheme = localStorage.getItem('theme') || 'light';
+                updateLandingThemeIcon(currentTheme);
+
+                themeBtn.addEventListener('click', () => {
+                    const activeTheme = localStorage.getItem('theme') || 'light';
+                    const newTheme = activeTheme === 'light' ? 'dark' : 'light';
+                    localStorage.setItem('theme', newTheme);
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    updateLandingThemeIcon(newTheme);
+                });
+
+                function updateLandingThemeIcon(theme) {
+                    if (theme === 'light') {
+                        themeIcon.className = 'fa-solid fa-moon';
+                    } else {
+                        themeIcon.className = 'fa-solid fa-sun';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

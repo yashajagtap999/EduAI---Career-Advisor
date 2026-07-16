@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI | Resume X-Ray</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/animation.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Custom drag & drop area styling */
+        .dropzone {
+            border: 2px dashed var(--border-color);
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .dropzone.hover {
+            border-color: var(--primary-blue);
+            background-color: rgba(59, 130, 246, 0.04);
+        }
+        
+        .skill-tab-header {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1.5px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+        
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .skill-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            margin: 4px;
+        }
+        .chip-green { background-color: rgba(16, 185, 129, 0.12); color: #10B981; }
+        .chip-red { background-color: rgba(239, 68, 68, 0.12); color: #EF4444; }
+        .chip-blue { background-color: rgba(59, 130, 246, 0.12); color: #3B82F6; }
+
+        /* Accordion style */
+        .accordion-item {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        .accordion-header {
+            padding: 16px 20px;
+            font-weight: 700;
+            cursor: pointer;
+            background-color: var(--bg-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .accordion-content {
+            padding: 20px;
+            display: none;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body class="page-fade-in">
+
+    <div class="dashboard-wrapper">
+        
+        <!-- Sidebar Navigation Container -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            
+            <!-- Page Header -->
+            <header class="dash-header">
+                <div class="dash-title-area">
+                    <h1>📄 Resume X-Ray</h1>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 500;">Calculate your CV format index, identify keyword gaps, and build optimized resumes.</p>
+                </div>
+            </header>
+
+            <!-- File Upload zone -->
+            <section style="margin-bottom: 32px;">
+                <div class="dropzone" id="file-dropzone">
+                    <input type="file" id="resume-file-input" accept=".pdf,.docx,.png,.jpg,.jpeg" style="display: none;">
+                    <div style="font-size: 48px; color: var(--primary-blue); margin-bottom: 16px;"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <h3 style="font-size: 20px; margin-bottom: 8px;">Upload your CV / Resume</h3>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Supports PDF, DOCX, PNG, JPG (Max 5MB)</p>
+                    <button class="btn-primary" onclick="document.getElementById('resume-file-input').click()">Browse Files</button>
+                </div>
+            </section>
+
+            <!-- Animated Loading Progress Panel -->
+            <div id="loading-spinner" style="display: none; max-width: 600px; margin: 40px auto; text-align: center; padding: 40px 32px; background: rgba(30, 41, 59, 0.35); border: 1.5px solid var(--border-color); border-radius: var(--radius-lg); backdrop-filter: blur(12px); box-shadow: var(--shadow-lg);">
+                
+                <!-- Circular Progress Ring -->
+                <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 24px auto;">
+                    <svg width="120" height="120" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="50" stroke="rgba(255, 255, 255, 0.05)" stroke-width="8" fill="transparent" />
+                        <circle id="progress-circle" cx="60" cy="60" r="50" stroke="var(--primary-blue)" stroke-width="8" fill="transparent" 
+                                stroke-dasharray="314.16" stroke-dashoffset="314.16" stroke-linecap="round" style="transition: stroke-dashoffset 0.1s ease; transform: rotate(-90deg); transform-origin: 50% 50%;" />
+                    </svg>
+                    <div id="progress-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20px; font-weight: 800; color: var(--text-primary);">0%</div>
+                </div>
+
+                <h3 id="loader-phase-title" style="font-size: 16px; font-weight: 750; margin-bottom: 8px; color: var(--text-primary);">Uploading Document...</h3>
+                <p id="loader-phase-desc" style="font-size: 13px; color: var(--text-secondary); max-width: 400px; margin: 0 auto 20px auto;">Transferring resume to server securely</p>
+
+                <!-- Detailed Task Progress List -->
+                <div style="background-color: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color); padding: 18px; text-align: left; display: flex; flex-direction: column; gap: 12px; max-width: 450px; margin: 0 auto;">
+                    <div id="phase-step-1" style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted);">
+                        <i class="fa-solid fa-circle-notch fa-spin" style="color: var(--primary-blue); font-size: 12px;"></i>
+                        <span>Parsing document text & contact details</span>
+                    </div>
+                    <div id="phase-step-2" style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted);">
+                        <i class="fa-solid fa-circle" style="color: rgba(255,255,255,0.15); font-size: 8px;"></i>
+                        <span>Extracting skills & professional experience DNA</span>
+                    </div>
+                    <div id="phase-step-3" style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted);">
+                        <i class="fa-solid fa-circle" style="color: rgba(255,255,255,0.15); font-size: 8px;"></i>
+                        <span>Calculating formatting completeness index</span>
+                    </div>
+                    <div id="phase-step-4" style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted);">
+                        <i class="fa-solid fa-circle" style="color: rgba(255,255,255,0.15); font-size: 8px;"></i>
+                        <span>Performing deep ATS keyword gap matching</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Results Wrapper (shown upon scan) -->
+            <div id="results-wrapper" style="display: none;">
+                
+                <!-- KPI Results Row -->
+                <section class="grid-2" style="margin-bottom: 32px;">
+                    <!-- Score Card -->
+                    <div class="glass-card" style="text-align: center; padding: 40px;">
+                        <h4 style="color: var(--text-muted); text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em; margin-bottom: 12px;">ATS compatibility Index</h4>
+                        <h1 style="font-size: 64px; line-height: 1; font-weight: 900; margin-bottom: 16px;" id="ats-score-badge">0%</h1>
+                        <span id="score-quality-label" class="list-item-badge badge-green" style="padding: 6px 16px;">Excellent Match</span>
+                    </div>
+                    <!-- Details Suggestions Card -->
+                    <div class="glass-card">
+                        <h3 style="margin-bottom: 16px;"><i class="fa-solid fa-lightbulb" style="color: var(--warning); margin-right: 8px;"></i> Recommended Actions</h3>
+                        <div id="ats-tips-list" style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; height: 140px; overflow-y: auto;">
+                            <!-- Dynamic tips render here -->
+                        </div>
+                    </div>
+                </section>
+
+                <section class="glass-card" style="margin-bottom: 32px; border-left: 4px solid var(--accent-purple);">
+                    <p style="font-size: 13px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Target Career Match</p>
+                    <h2 id="detected-role-badge" style="color: var(--accent-purple); font-size: 28px;">Software Engineer</h2>
+                </section>
+
+                <!-- Skill Gaps Tabs Grid -->
+                <section class="glass-card" style="margin-bottom: 32px;">
+                    <div class="skill-tab-header">
+                        <button class="tab-btn active" data-tab="matched-skills-content">🟢 Matched Skills</button>
+                        <button class="tab-btn" data-tab="missing-skills-content">🔴 Missing Keywords</button>
+                        <button class="tab-btn" data-tab="additional-skills-content">🔵 Additional Strengths</button>
+                    </div>
+
+                    <div id="matched-skills-content" class="tab-pane">
+                        <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 16px;">Skills matched in your resume aligned with target role requirements:</p>
+                        <div id="matched-skills-chips"></div>
+                    </div>
+                    <div id="missing-skills-content" class="tab-pane" style="display: none;">
+                        <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 16px;">Required keywords missing from your resume that recruiters search for:</p>
+                        <div id="missing-skills-chips"></div>
+                    </div>
+                    <div id="additional-skills-content" class="tab-pane" style="display: none;">
+                        <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 16px;">Extra technical strengths detected in your resume profile:</p>
+                        <div id="additional-skills-chips"></div>
+                    </div>
+                </section>
+
+                <!-- Mastery Plans Accordions -->
+                <section style="margin-bottom: 40px;">
+                    <h2 style="font-size: 22px; margin-bottom: 16px;"><i class="fa-solid fa-graduation-cap" style="color: var(--primary-blue); margin-right: 8px;"></i> Recommended Skill roadmaps</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 13.5px;">Click any missing keyword to view a step-by-step master plan and learning resources.</p>
+                    <div id="mastery-plans-accordion">
+                        <!-- Dynamic items -->
+                    </div>
+                </section>
+
+                <!-- Optimization Action CTA -->
+                <section class="glass-card" style="text-align: center; padding: 40px; margin-bottom: 40px; border: 1.5px solid rgba(59, 130, 246, 0.25);">
+                    <h2 style="margin-bottom: 12px;">Let AI Write Your Optimized Resume</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto;">Our generator automatically restructures your work experience, injects missing keywords, and compiles a premium ATS-compatible document.</p>
+                    <button class="btn-primary pulse-btn" id="optimize-resume-btn">Generate Optimized Resume 🚀</button>
+                </div>
+
+                <!-- Preview optimized resume PDF -->
+                <section id="optimized-preview-section" style="display: none; margin-bottom: 40px;" class="glass-card">
+                    <h3 style="margin-bottom: 24px;"><i class="fa-solid fa-file-pdf" style="color: #EF4444; margin-right: 8px;"></i> Generated Resume Preview</h3>
+                    
+                    <div id="resume-preview-panel" style="background-color: var(--bg-secondary); border-radius: var(--radius-md); padding: 32px; border: 1.5px solid var(--border-color); max-height: 400px; overflow-y: auto; font-family: monospace; font-size: 12.5px; line-height: 1.8; color: var(--text-primary); margin-bottom: 24px;">
+                        <!-- Previews formatted fields -->
+                    </div>
+
+                    <a href="#" id="download-resume-pdf-btn" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px;"><i class="fa-solid fa-file-arrow-down"></i> Download ATS-Optimized PDF</a>
+                </section>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/animation.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropzone = document.getElementById('file-dropzone');
+            const fileInput = document.getElementById('resume-file-input');
+            const spinner = document.getElementById('loading-spinner');
+            const resultsWrapper = document.getElementById('results-wrapper');
+            const optimizeBtn = document.getElementById('optimize-resume-btn');
+            const previewSection = document.getElementById('optimized-preview-section');
+            const previewPanel = document.getElementById('resume-preview-panel');
+            const downloadPdfBtn = document.getElementById('download-resume-pdf-btn');
+
+            let scannedData = null; // Local copy of scan results
+
+            // Drag and drop event bindings
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('hover');
+            });
+            dropzone.addEventListener('dragleave', () => dropzone.classList.remove('hover'));
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('hover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) uploadFile(files[0]);
+            });
+
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) uploadFile(fileInput.files[0]);
+            });
+
+            // Animated Progress Loop
+            let progressInterval = null;
+            let currentProgress = 0;
+
+            function startProgressAnimation() {
+                currentProgress = 0;
+                updateProgressUI(0);
+                
+                const phaseTitle = document.getElementById('loader-phase-title');
+                const phaseDesc = document.getElementById('loader-phase-desc');
+                
+                const step1 = document.getElementById('phase-step-1');
+                const step2 = document.getElementById('phase-step-2');
+                const step3 = document.getElementById('phase-step-3');
+                const step4 = document.getElementById('phase-step-4');
+
+                function setChecked(stepEl, textStr) {
+                    stepEl.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 13px;"></i> <span style="color: var(--text-primary); font-weight: 500;">${textStr}</span>`;
+                }
+
+                function setSpinner(stepEl, textStr) {
+                    stepEl.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin" style="color: var(--primary-blue); font-size: 12px;"></i> <span style="color: var(--text-primary); font-weight: 500;">${textStr}</span>`;
+                }
+
+                function setPending(stepEl, textStr) {
+                    stepEl.innerHTML = `<i class="fa-solid fa-circle" style="color: rgba(255,255,255,0.15); font-size: 8px;"></i> <span style="color: var(--text-muted);">${textStr}</span>`;
+                }
+
+                // Reset states
+                setSpinner(step1, "Parsing document text & contact details");
+                setPending(step2, "Extracting skills & professional experience DNA");
+                setPending(step3, "Calculating formatting completeness index");
+                setPending(step4, "Performing deep ATS keyword gap matching");
+
+                if (phaseTitle) phaseTitle.textContent = "Uploading Document...";
+                if (phaseDesc) phaseDesc.textContent = "Transferring resume to server securely";
+
+                const totalDuration = 4000; 
+                const intervalTime = 50;
+                const stepIncrement = 95 / (totalDuration / intervalTime);
+
+                if (progressInterval) clearInterval(progressInterval);
+
+                progressInterval = setInterval(() => {
+                    if (currentProgress < 95) {
+                        currentProgress += stepIncrement;
+                        if (currentProgress > 95) currentProgress = 95;
+                        
+                        const percent = Math.floor(currentProgress);
+                        updateProgressUI(percent);
+
+                        if (percent >= 25 && percent < 50) {
+                            if (phaseTitle) phaseTitle.textContent = "Extracting DNA Profile...";
+                            if (phaseDesc) phaseDesc.textContent = "Detecting core technologies and career milestones";
+                            setChecked(step1, "Parsed document text & contact details");
+                            setSpinner(step2, "Extracting skills & professional experience DNA");
+                        } else if (percent >= 50 && percent < 75) {
+                            if (phaseTitle) phaseTitle.textContent = "Evaluating Structure...";
+                            if (phaseDesc) phaseDesc.textContent = "Analyzing headers, links, and layout readability";
+                            setChecked(step1, "Parsed document text & contact details");
+                            setChecked(step2, "Extracted skills & experience DNA");
+                            setSpinner(step3, "Calculating formatting completeness index");
+                        } else if (percent >= 75) {
+                            if (phaseTitle) phaseTitle.textContent = "Running ATS Check...";
+                            if (phaseDesc) phaseDesc.textContent = "Comparing keywords with industry-standard career profiles";
+                            setChecked(step1, "Parsed document text & contact details");
+                            setChecked(step2, "Extracted skills & experience DNA");
+                            setChecked(step3, "Calculated formatting index");
+                            setSpinner(step4, "Performing deep ATS keyword gap matching");
+                        }
+                    }
+                }, intervalTime);
+            }
+
+            function updateProgressUI(percent) {
+                const circle = document.getElementById('progress-circle');
+                const text = document.getElementById('progress-text');
+                if (text) text.textContent = `${percent}%`;
+                
+                const circumference = 314.16;
+                const offset = circumference - (percent / 100) * circumference;
+                if (circle) circle.style.strokeDashoffset = offset;
+            }
+
+            async function finishProgressAnimation() {
+                clearInterval(progressInterval);
+                
+                const step1 = document.getElementById('phase-step-1');
+                const step2 = document.getElementById('phase-step-2');
+                const step3 = document.getElementById('phase-step-3');
+                const step4 = document.getElementById('phase-step-4');
+                const phaseTitle = document.getElementById('loader-phase-title');
+                const phaseDesc = document.getElementById('loader-phase-desc');
+
+                function setChecked(stepEl, textStr) {
+                    stepEl.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 13px;"></i> <span style="color: var(--text-primary); font-weight: 500;">${textStr}</span>`;
+                }
+
+                setChecked(step1, "Parsed document text & contact details");
+                setChecked(step2, "Extracted skills & experience DNA");
+                setChecked(step3, "Calculated formatting index");
+                setChecked(step4, "Performed deep ATS keyword gap matching");
+
+                if (phaseTitle) phaseTitle.textContent = "Report Completed!";
+                if (phaseDesc) phaseDesc.textContent = "Rendering ATS gap breakdown...";
+
+                let finalVal = Math.floor(currentProgress);
+                return new Promise((resolve) => {
+                    const finishInterval = setInterval(() => {
+                        if (finalVal < 100) {
+                            finalVal += 2;
+                            if (finalVal > 100) finalVal = 100;
+                            updateProgressUI(finalVal);
+                        } else {
+                            clearInterval(finishInterval);
+                            setTimeout(resolve, 600); 
+                        }
+                    }, 30);
+                });
+            }
+
+            // Upload resume calling API
+            async function uploadFile(file) {
+                // UI updates
+                dropzone.style.display = 'none';
+                resultsWrapper.style.display = 'none';
+                previewSection.style.display = 'none';
+                spinner.style.display = 'block';
+
+                startProgressAnimation();
+
+                try {
+                    const res = await Api.scanResume(file);
+                    scannedData = res;
+                    
+                    // Finalize progress smoothly
+                    await finishProgressAnimation();
+                    
+                    renderResults(res);
+                } catch (e) {
+                    if (progressInterval) clearInterval(progressInterval);
+                    alert('Error scanning resume: ' + e.message);
+                    dropzone.style.display = 'block';
+                } finally {
+                    spinner.style.display = 'none';
+                }
+            }
+
+            function renderResults(res) {
+                resultsWrapper.style.display = 'block';
+
+                // Set Score Badge
+                const scoreBadge = document.getElementById('ats-score-badge');
+                scoreBadge.textContent = `${res.ats_score}%`;
+                
+                const scoreLabel = document.getElementById('score-quality-label');
+                if (res.ats_score >= 80) {
+                    scoreLabel.className = 'list-item-badge badge-green';
+                    scoreLabel.textContent = 'Excellent Match';
+                } else if (res.ats_score >= 60) {
+                    scoreLabel.className = 'list-item-badge badge-orange';
+                    scoreLabel.textContent = 'Moderate Match';
+                } else {
+                    scoreLabel.className = 'list-item-badge badge-red';
+                    scoreLabel.textContent = 'Attention Needed';
+                }
+
+                // Detected role
+                document.getElementById('detected-role-badge').textContent = res.predicted_role;
+
+                // Load tips
+                const tipsList = document.getElementById('ats-tips-list');
+                tipsList.innerHTML = '';
+                res.tips.forEach(tip => {
+                    tipsList.innerHTML += `
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="color: var(--primary-blue); font-weight: bold;">+</span>
+                            <span>${tip}</span>
+                        </div>
+                    `;
+                });
+
+                // Load skill chips
+                renderChips('matched-skills-chips', res.matched_skills, 'chip-green');
+                renderChips('missing-skills-chips', res.missing_skills, 'chip-red');
+                renderChips('additional-skills-chips', res.additional_skills, 'chip-blue');
+
+                // Load mastery roadmaps
+                const accordion = document.getElementById('mastery-plans-accordion');
+                accordion.innerHTML = '';
+                
+                let index = 0;
+                for (const [skill, planObj] of Object.entries(res.mastery_plans)) {
+                    const planSteps = planObj.plan.map(step => `<li>${step}</li>`).join('');
+                    
+                    let resourceHTML = '';
+                    for (const [name, link] of Object.entries(planObj.resources)) {
+                        resourceHTML += `<li><a href="${link}" target="_blank" style="color: var(--primary-blue); text-decoration: underline; font-weight: 600;">${name} →</a></li>`;
+                    }
+
+                    accordion.innerHTML += `
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <span>Mastery Plan: ${skill.charAt(0).toUpperCase() + skill.slice(1)}</span>
+                                <span><i class="fa-solid fa-chevron-down"></i></span>
+                            </div>
+                            <div class="accordion-content">
+                                <h4 style="margin-bottom: 8px;">Learning Plan:</h4>
+                                <ul style="margin-bottom: 16px; padding-left: 20px;">${planSteps}</ul>
+                                <h4 style="margin-bottom: 8px;">Recommended Resources:</h4>
+                                <ul style="padding-left: 20px;">${resourceHTML}</ul>
+                            </div>
+                        </div>
+                    `;
+                    index++;
+                }
+
+                // Reset dropzone for re-scanning
+                dropzone.style.display = 'block';
+                dropzone.querySelector('h3').textContent = 'Re-upload / Scan Another Resume';
+            }
+
+            function renderChips(containerId, list, chipClass) {
+                const el = document.getElementById(containerId);
+                el.innerHTML = '';
+                if (list.length === 0) {
+                    el.innerHTML = '<p style="color: var(--text-muted); font-style: italic;">None detected</p>';
+                    return;
+                }
+                list.forEach(item => {
+                    el.innerHTML += `<span class="skill-chip ${chipClass}">${item}</span>`;
+                });
+            }
+
+            // Tabs events
+            const tabs = document.querySelectorAll('.skill-tab-header .tab-btn');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.classList.remove('active');
+                        document.getElementById(t.getAttribute('data-tab')).style.display = 'none';
+                    });
+                    tab.classList.add('active');
+                    document.getElementById(tab.getAttribute('data-tab')).style.display = 'block';
+                });
+            });
+
+            // Optimize resume click handler
+            optimizeBtn.addEventListener('click', async () => {
+                if (!scannedData) return;
+
+                optimizeBtn.disabled = true;
+                optimizeBtn.textContent = 'Generating ATS Optimization... ✍️';
+
+                try {
+                    const res = await Api.optimizeResume(
+                        scannedData.resume_text,
+                        scannedData.missing_skills,
+                        scannedData.predicted_role
+                    );
+
+                    previewSection.style.display = 'block';
+                    
+                    // Render formatted dictionary preview
+                    const rd = res.resume_data;
+                    previewPanel.innerHTML = `
+                        <h2 style="text-align: center; font-weight: bold; margin-bottom: 4px;">${rd.name || ''}</h2>
+                        <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;">${rd.email || ''} | ${rd.phone || ''} | ${rd.location || ''}</p>
+                        <hr style="border-color: var(--border-color); margin-bottom: 20px;">
+                        
+                        <h3 style="margin-bottom: 8px;">PROFESSIONAL SUMMARY</h3>
+                        <p style="margin-bottom: 20px;">${rd.summary || ''}</p>
+                        
+                        <h3 style="margin-bottom: 8px;">EDUCATION</h3>
+                        <p style="font-weight: bold;">${rd.education ? rd.education[0]?.degree || '' : ''}</p>
+                        <p>${rd.education ? rd.education[0]?.institution || '' : ''} (${rd.education ? rd.education[0]?.dates || '' : ''})</p>
+                    `;
+
+                    // Set download link
+                    downloadPdfBtn.href = `/api/resume/download?token=${res.download_token}`;
+                    
+                    // Scroll to preview
+                    previewSection.scrollIntoView({ behavior: 'smooth' });
+
+                } catch (e) {
+                    alert('Error generating resume: ' + e.message);
+                } finally {
+                    optimizeBtn.disabled = false;
+                    optimizeBtn.textContent = 'Generate Optimized Resume 🚀';
+                }
+            });
+        });
+
+        // Global accordion toggle helper
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('i');
+            
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+                icon.className = 'fa-solid fa-chevron-down';
+            } else {
+                content.style.display = 'block';
+                icon.className = 'fa-solid fa-chevron-up';
+            }
+        }
+    </script>
+</body>
+</html>

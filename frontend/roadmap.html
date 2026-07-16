@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI | AI Career Roadmap</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/animation.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <!-- CDNs -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="page-fade-in">
+
+    <div class="dashboard-wrapper">
+        
+        <!-- Sidebar Navigation Container -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            
+            <!-- Page Header -->
+            <header class="dash-header">
+                <div class="dash-title-area">
+                    <h1>🗺️ AI Career Roadmap</h1>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 500;">Configure your target career path and track your placement preparedness blueprint across Semesters 4 through 8.</p>
+                </div>
+            </header>
+
+            <!-- AI Roadmap Section -->
+            <section style="max-width: 900px; margin: 0 auto;">
+                <!-- AI Career Roadmap Card -->
+                <div class="chart-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+                        <h3 style="margin-bottom: 0;"><i class="fa-solid fa-timeline" style="color: var(--primary-blue); margin-right: 8px;"></i> Semester Timeline</h3>
+                        <select class="form-control" id="roadmap-role-select" style="max-width: 250px; padding: 6px 12px; font-size: 13px; margin-bottom: 0; background-color: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: var(--radius-sm);">
+                            <optgroup label="Computer Science & Engineering">
+                                <option value="Machine Learning Engineer">Machine Learning Engineer</option>
+                                <option value="Software Developer" selected>Software Developer</option>
+                            </optgroup>
+                            <optgroup label="Information Technology">
+                                <option value="Cloud & DevOps Engineer">Cloud & DevOps Engineer</option>
+                                <option value="Cybersecurity Specialist">Cybersecurity Specialist</option>
+                            </optgroup>
+                            <optgroup label="Electronics & Telecommunication">
+                                <option value="Embedded Systems & IoT Engineer">Embedded Systems & IoT Engineer</option>
+                            </optgroup>
+                            <optgroup label="Mechanical Engineering">
+                                <option value="Design & CAD Engineer">Design & CAD Engineer</option>
+                                <option value="Robotics & Automation Engineer">Robotics & Automation Engineer</option>
+                            </optgroup>
+                            <optgroup label="Electrical Engineering">
+                                <option value="Power & Control Systems Engineer">Power & Control Systems Engineer</option>
+                            </optgroup>
+                            <optgroup label="Civil Engineering">
+                                <option value="Structural Design Engineer">Structural Design Engineer</option>
+                            </optgroup>
+                            <optgroup label="Chemical Engineering">
+                                <option value="Process & Chemical Engineer">Process & Chemical Engineer</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 16px; max-height: 500px; overflow-y: auto; padding-right: 8px;" id="roadmap-semesters-list">
+                        <!-- Timeline semesters 4-8 will load here -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/animation.js"></script>
+    <script src="/js/roadmap.js"></script>
+</body>
+</html>

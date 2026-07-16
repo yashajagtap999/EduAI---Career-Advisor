@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI | Internship Recommendation Engine</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/animation.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <!-- CDNs -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="page-fade-in">
+
+    <div class="dashboard-wrapper">
+        
+        <!-- Sidebar Navigation Container -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            
+            <!-- Page Header -->
+            <header class="dash-header">
+                <div class="dash-title-area">
+                    <h1>💼 Internship Recommendations</h1>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 500;">Match your academic stats, branch, and professional skills with active real-time global opportunities from Adzuna.</p>
+                </div>
+            </header>
+
+            <!-- Search Form Section -->
+            <section class="grid-3" style="grid-template-columns: 1fr 2fr; gap: 32px;">
+                
+                <!-- Left Column: Upload Resume + Recommendation Filters -->
+                <div style="display: flex; flex-direction: column; gap: 24px; height: fit-content;">
+                    
+                    <!-- Upload Resume Card -->
+                    <div class="chart-card">
+                        <h3 style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--warning);"></i> Option 1: AI Automated Match</h3>
+                        <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 16px; font-weight: 500;">Scan your CV/Resume to get instant domain-personalized recommendations.</p>
+                        
+                        <div id="internship-upload-zone" style="border: 2.2px dashed var(--border-color); border-radius: var(--radius-md); padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s ease-in-out; background-color: var(--bg-primary);">
+                            <span style="font-size: 32px; display: block; margin-bottom: 10px; color: var(--text-muted);"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+                            <span style="font-size: 13px; font-weight: 600; color: var(--text-primary); display: block;">Drag & drop your resume here</span>
+                            <span style="font-size: 11.5px; color: var(--text-muted); display: block; margin-top: 4px;">Supports PDF or DOCX format</span>
+                            <input type="file" id="internship-resume-file" style="display: none;" accept=".pdf,.docx">
+                        </div>
+                        
+                        <div id="internship-upload-progress" style="display: none; align-items: center; gap: 8px; margin-top: 12px; font-size: 12.5px; color: var(--text-secondary);">
+                            <i class="fa-solid fa-circle-notch fa-spin" style="color: var(--primary-blue);"></i>
+                            <span>Scanning and extracting resume profile...</span>
+                        </div>
+                    </div>
+
+                    <!-- Filter Panel Card -->
+                    <div class="chart-card" style="height: fit-content;">
+                        <h3 style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-sliders" style="color: var(--primary-blue);"></i> Option 2: Manual Search & Filters</h3>
+                        <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 16px; font-weight: 500;">Manually configure details to find active opportunities.</p>
+                        
+                        <form id="internship-form" style="display: flex; flex-direction: column; gap: 16px;">
+                            
+                            <div>
+                                <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--text-secondary);">Target Career Domain</label>
+                                <select class="form-control" id="internship-branch" style="background-color: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: var(--radius-sm); width: 100%; padding: 8px 12px; font-size: 13px; color: var(--text-primary);">
+                                    <optgroup label="AI & Data Science">
+                                        <option value="Machine Learning">Machine Learning (ML)</option>
+                                        <option value="Artificial Intelligence">Artificial Intelligence (AI)</option>
+                                        <option value="Data Science">Data Science</option>
+                                        <option value="Data Analyst">Data Analyst</option>
+                                        <option value="Data Engineer">Data Engineer</option>
+                                    </optgroup>
+                                    <optgroup label="Software & Web Development">
+                                        <option value="Web Developer" selected>Web Developer</option>
+                                        <option value="Full Stack Developer">Full Stack Developer</option>
+                                        <option value="Frontend Developer">Frontend Developer</option>
+                                        <option value="Backend Developer">Backend Developer</option>
+                                        <option value="Python Developer">Python Developer</option>
+                                        <option value="Java Developer">Java Developer</option>
+                                        <option value="Mobile App Developer">Mobile App Developer</option>
+                                    </optgroup>
+                                    <optgroup label="Cloud & Cybersecurity">
+                                        <option value="Cyber Security">Cyber Security</option>
+                                        <option value="DevOps Engineer">Cloud & DevOps Engineer</option>
+                                    </optgroup>
+                                    <optgroup label="Core Engineering & Design">
+                                        <option value="Embedded Systems">Embedded Systems & IoT</option>
+                                        <option value="Mechanical Design">CAD & Mechanical Design</option>
+                                        <option value="Robotics">Robotics & Automation</option>
+                                        <option value="Electrical Engineering">Electrical Engineering</option>
+                                        <option value="Civil Engineering">Civil Engineering</option>
+                                        <option value="Chemical Engineering">Chemical Engineering</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--text-secondary);">Current CGPA</label>
+                                <input type="number" step="0.01" min="0" max="10" class="form-control" id="internship-cgpa" placeholder="E.g. 8.5" style="background-color: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: var(--radius-sm); width: 100%; padding: 8px 12px; font-size: 13px; color: var(--text-primary);" required>
+                            </div>
+                            
+                            <div>
+                                <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--text-secondary);">Location Preference</label>
+                                <input type="text" class="form-control" id="internship-location" placeholder="E.g. Pune, Bangalore, Remote" style="background-color: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: var(--radius-sm); width: 100%; padding: 8px 12px; font-size: 13px; color: var(--text-primary);" value="">
+                            </div>
+                            
+                            <div>
+                                <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--text-secondary);">Professional Skills (Comma separated)</label>
+                                <input type="text" class="form-control" id="internship-skills" placeholder="E.g. React, Python, SolidWorks" style="background-color: var(--bg-secondary); border: 1.5px solid var(--border-color); border-radius: var(--radius-sm); width: 100%; padding: 8px 12px; font-size: 13px; color: var(--text-primary);" required>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary" style="margin-top: 10px; width: 100%; padding: 12px 20px; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600;">
+                                <span>Find Internships</span> <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Results Panel Card -->
+                <div class="chart-card">
+                    <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-briefcase" style="color: var(--warning); margin-right: 8px;"></i> Recommended Opportunities</h3>
+                    
+                    <div id="internships-loading" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 250px; color: var(--text-muted);">
+                        <span style="font-size: 32px; margin-bottom: 12px;"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                        <p style="font-size: 13px; font-weight: 600;">Querying live postings from Adzuna...</p>
+                    </div>
+
+                    <div id="internships-empty" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 250px; color: var(--text-muted);">
+                        <span style="font-size: 40px; margin-bottom: 12px;">💼</span>
+                        <p style="font-size: 13px; font-weight: 600; text-align: center;">Enter your criteria and click search to recommend matching internships.</p>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">If you have a scanned resume, we will auto-fill your skills and branch!</p>
+                    </div>
+
+                    <div id="internships-list" style="display: flex; flex-direction: column; gap: 16px; max-height: 550px; overflow-y: auto; padding-right: 8px;">
+                        <!-- Internship cards render dynamically -->
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/animation.js"></script>
+    <script src="/js/internships.js"></script>
+</body>
+</html>

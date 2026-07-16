@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI | College Finder</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/animation.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .blueprint-timeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .blueprint-card {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--primary-blue);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .blueprint-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+    </style>
+</head>
+<body class="page-fade-in">
+
+    <div class="dashboard-wrapper">
+        
+        <!-- Sidebar Navigation Container -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            
+            <!-- Page Header -->
+            <header class="dash-header">
+                <div class="dash-title-area">
+                    <h1>🎓 College Finder</h1>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 500;">Discover target courses, filter top institutions, and download academic blueprints.</p>
+                </div>
+            </header>
+
+            <!-- Inputs & Filters Section -->
+            <section class="glass-card" style="margin-bottom: 40px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="fields-select"><i class="fa-solid fa-layer-group" style="color: var(--primary-blue); margin-right: 8px;"></i> Select Target Field of Study</label>
+                    <select class="form-control" id="fields-select">
+                        <option value="" disabled selected>Choose a study field...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="city-filter"><i class="fa-solid fa-map-location-dot" style="color: var(--primary-blue); margin-right: 8px;"></i> Filter by City (Optional)</label>
+                    <select class="form-control" id="city-filter" disabled>
+                        <option value="">All Regions</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Results Section (Tabs) -->
+            <div id="college-results-wrapper" style="display: none;">
+                
+                <div class="skill-tab-header">
+                    <button class="tab-btn active" data-tab="tab-institutions">🎓 Recommended Colleges</button>
+                    <button class="tab-btn" data-tab="tab-blueprint">🛣️ 4-Year Academic Blueprint</button>
+                </div>
+
+                <!-- Colleges tab -->
+                <div id="tab-institutions" class="tab-pane">
+                    <h3 style="font-size: 18px; margin-bottom: 20px;"><i class="fa-solid fa-school" style="color: var(--primary-blue); margin-right: 8px;"></i> Top Universities</h3>
+                    <div class="grid-2" id="colleges-list-grid" style="margin-bottom: 40px;">
+                        <!-- College recommendation cards -->
+                    </div>
+                </div>
+
+                <!-- Roadmap tab -->
+                <div id="tab-blueprint" class="tab-pane" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+                        <div>
+                            <h3 style="font-size: 18px; margin-bottom: 4px;"><i class="fa-solid fa-route" style="color: var(--accent-purple); margin-right: 8px;"></i> 4-Year Academic Blueprint</h3>
+                            <p style="font-size: 13px; color: var(--text-muted);">A structured semester-by-semester learning path to hit target skills.</p>
+                        </div>
+                        <a href="#" id="download-blueprint-btn" class="btn-primary" style="padding: 10px 20px; font-size: 13.5px;"><i class="fa-solid fa-file-pdf"></i> Export Roadmap PDF</a>
+                    </div>
+                    
+                    <div class="blueprint-timeline" id="blueprint-timeline-grid">
+                        <!-- Dynamic blueprint cards -->
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/animation.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const fieldsSelect = document.getElementById('fields-select');
+            const cityFilter = document.getElementById('city-filter');
+            const resultsWrapper = document.getElementById('college-results-wrapper');
+            const collegesGrid = document.getElementById('colleges-list-grid');
+            const timelineGrid = document.getElementById('blueprint-timeline-grid');
+            const downloadBtn = document.getElementById('download-blueprint-btn');
+
+            let allRawColleges = []; // Stores current field colleges list
+
+            // 1. Load available fields
+            try {
+                const res = await Api.getFields();
+                res.fields.forEach(field => {
+                    fieldsSelect.innerHTML += `<option value="${field}">${field}</option>`;
+                });
+            } catch (e) {
+                console.error('Error fetching fields:', e);
+            }
+
+            // 2. Event handler for field selection
+            fieldsSelect.addEventListener('change', async () => {
+                const selectedField = fieldsSelect.value;
+                if (!selectedField) return;
+
+                resultsWrapper.style.display = 'block';
+
+                try {
+                    // Fetch colleges
+                    const resColleges = await Api.getColleges(selectedField);
+                    allRawColleges = resColleges.colleges;
+                    
+                    // Populate cities filter
+                    populateCitiesFilter(allRawColleges);
+                    renderColleges(allRawColleges);
+
+                    // Fetch 4-year roadmap
+                    const resRoadmap = await Api.getRoadmap(selectedField);
+                    renderTimeline(resRoadmap.roadmap);
+
+                    // Set PDF download path
+                    downloadBtn.href = `/api/resume/download?token=${resRoadmap.download_token}`;
+
+                } catch (e) {
+                    alert('Error loading course pathways: ' + e.message);
+                }
+            });
+
+            // 3. Event handler for city filtering
+            cityFilter.addEventListener('change', () => {
+                const selectedCity = cityFilter.value;
+                if (selectedCity === '') {
+                    renderColleges(allRawColleges);
+                } else {
+                    const filtered = allRawColleges.filter(c => c.city.toLowerCase() === selectedCity.toLowerCase());
+                    renderColleges(filtered);
+                }
+            });
+
+            function populateCitiesFilter(colleges) {
+                cityFilter.disabled = false;
+                cityFilter.innerHTML = '<option value="">All Regions</option>';
+                const cities = [...new Set(colleges.map(c => c.city))].sort();
+                cities.forEach(city => {
+                    cityFilter.innerHTML += `<option value="${city}">${city}</option>`;
+                });
+            }
+
+            function renderColleges(colleges) {
+                collegesGrid.innerHTML = '';
+                if (colleges.length === 0) {
+                    collegesGrid.innerHTML = '<p style="color: var(--text-muted); font-style: italic;">No universities match this filter.</p>';
+                    return;
+                }
+                colleges.forEach(c => {
+                    collegesGrid.innerHTML += `
+                        <div class="glass-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h4 style="color: var(--primary-blue); font-size: 17px; margin-bottom: 6px;">${c.name}</h4>
+                                <p style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;"><i class="fa-solid fa-map-pin"></i> ${c.city}</p>
+                                <p style="font-size: 13.5px; line-height: 1.6; color: var(--text-secondary);">${c.description}</p>
+                            </div>
+                            <a href="${c.website}" target="_blank" class="btn-secondary" style="align-self: flex-start; margin-top: 18px; padding: 8px 16px; font-size: 12px;">Visit Website <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                    `;
+                });
+            }
+
+            function renderTimeline(roadmap) {
+                timelineGrid.innerHTML = '';
+                let index = 1;
+                for (const [year, data] of Object.entries(roadmap)) {
+                    // data: {summary: "...", topics: [...]}
+                    timelineGrid.innerHTML += `
+                        <div class="blueprint-card">
+                            <h4 style="color: var(--primary-blue); font-size: 16px; margin-bottom: 10px;">${year}</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">${data.summary}</p>
+                        </div>
+                    `;
+                    index++;
+                }
+            }
+
+            // Tabs events
+            const tabs = document.querySelectorAll('.skill-tab-header .tab-btn');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.classList.remove('active');
+                        document.getElementById(t.getAttribute('data-tab')).style.display = 'none';
+                    });
+                    tab.classList.add('active');
+                    document.getElementById(tab.getAttribute('data-tab')).style.display = 'block';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

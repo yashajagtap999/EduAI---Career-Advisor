@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI | Sign In</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/animation.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="page-fade-in" style="display: flex; min-height: 100vh; align-items: center; justify-content: center; padding: 40px 0;">
+
+    <!-- Background overlays -->
+    <div class="perspective-grid"></div>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <!-- Centered Login Glass Card -->
+    <div class="glass-card" style="width: 100%; max-width: 480px; box-shadow: var(--shadow-lg);">
+        <div style="text-align: center; margin-bottom: 32px;">
+            <a href="/" class="logo" style="justify-content: center; margin-bottom: 12px;">
+                <img src="/assets/images/eduai_premium_logo.png" alt="EduAI Logo" onerror="this.style.display='none'">
+                <span>EduAI.</span>
+            </a>
+            <p style="font-size: 13px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">AI-Powered Career Intelligence</p>
+            <h2 style="margin-top: 16px; font-size: 24px; font-weight: 800;" id="form-heading">Welcome Back 👋</h2>
+        </div>
+
+        <!-- Form Tabs -->
+        <div style="display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 24px;">
+            <button id="tab-login" class="btn-primary" style="flex: 1; padding: 10px; border-radius: var(--radius-sm); font-size: 14px;">Sign In</button>
+            <button id="tab-signup" class="btn-secondary" style="flex: 1; padding: 10px; border-radius: var(--radius-sm); font-size: 14px; box-shadow: none;">Create Account</button>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alert-box" style="display: none; padding: 12px 16px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; margin-bottom: 20px;"></div>
+
+        <!-- Forms Container -->
+        <form id="auth-form" autocomplete="off">
+            <!-- Full Name field (Join only) -->
+            <div class="form-group" id="group-fullname" style="display: none;">
+                <label class="form-label" for="fullname-input"><i class="fa-solid fa-signature" style="color: var(--primary-blue); margin-right: 8px;"></i> Full Name</label>
+                <input class="form-control" type="text" id="fullname-input" placeholder="Enter your full name">
+            </div>
+
+            <!-- Username field (Shared) -->
+            <div class="form-group">
+                <label class="form-label" for="username-input"><i class="fa-solid fa-user" style="color: var(--primary-blue); margin-right: 8px;"></i> Username</label>
+                <input class="form-control" type="text" id="username-input" placeholder="Choose a username" required>
+            </div>
+
+            <!-- Email field (Join only) -->
+            <div class="form-group" id="group-email" style="display: none;">
+                <label class="form-label" for="email-input"><i class="fa-solid fa-envelope" style="color: var(--primary-blue); margin-right: 8px;"></i> Email Address</label>
+                <input class="form-control" type="email" id="email-input" placeholder="you@example.com">
+            </div>
+
+            <!-- Password field (Shared) -->
+            <div class="form-group" style="margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <label class="form-label" for="password-input" style="margin-bottom: 0;"><i class="fa-solid fa-lock" style="color: var(--primary-blue); margin-right: 8px;"></i> Password</label>
+                    <a href="#" style="font-size: 12px; color: var(--primary-blue); font-weight: 600; display: inline-block;" id="forgot-password-link">Forgot?</a>
+                </div>
+                <input class="form-control" type="password" id="password-input" placeholder="Enter your password" required>
+            </div>
+
+            <!-- Password Strength Bar (Join only) -->
+            <div id="password-strength-container" style="display: none; margin-bottom: 24px;">
+                <div class="metric-progress" style="height: 4px; background-color: var(--border-color); margin-top: 0; margin-bottom: 6px;">
+                    <div id="password-strength-fill" class="metric-progress-fill" style="width: 0%;"></div>
+                </div>
+                <span id="password-strength-label" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Strength: Weak</span>
+            </div>
+
+            <!-- Submit Buttons -->
+            <button type="submit" class="btn-primary pulse-btn" style="width: 100%; margin-top: 16px; justify-content: center; padding: 14px;" id="submit-btn">
+                <span>Continue with EduAI</span>
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 24px; font-size: 12px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Secure SSL encryption active</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+            const groupFullname = document.getElementById('group-fullname');
+            const groupEmail = document.getElementById('group-email');
+            const strengthContainer = document.getElementById('password-strength-container');
+            const formHeading = document.getElementById('form-heading');
+            const forgotLink = document.getElementById('forgot-password-link');
+            const authForm = document.getElementById('auth-form');
+            const alertBox = document.getElementById('alert-box');
+            const submitBtn = document.getElementById('submit-btn');
+
+            let activeTab = 'login'; // 'login' or 'signup'
+
+            // Parse URL params to select tab
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('tab') === 'signup') {
+                switchTab('signup');
+            }
+
+            // Tab click listeners
+            tabLogin.addEventListener('click', () => switchTab('login'));
+            tabSignup.addEventListener('click', () => switchTab('signup'));
+
+            function switchTab(tab) {
+                activeTab = tab;
+                hideAlert();
+                if (tab === 'login') {
+                    tabLogin.className = 'btn-primary';
+                    tabSignup.className = 'btn-secondary';
+                    tabSignup.style.boxShadow = 'none';
+                    groupFullname.style.display = 'none';
+                    groupEmail.style.display = 'none';
+                    strengthContainer.style.display = 'none';
+                    formHeading.textContent = 'Welcome Back 👋';
+                    forgotLink.style.display = 'inline-block';
+                    submitBtn.querySelector('span').textContent = 'Continue with EduAI';
+                    submitBtn.querySelector('i').className = 'fa-solid fa-arrow-right-to-bracket';
+                } else {
+                    tabLogin.className = 'btn-secondary';
+                    tabLogin.style.boxShadow = 'none';
+                    tabSignup.className = 'btn-primary';
+                    groupFullname.style.display = 'block';
+                    groupEmail.style.display = 'block';
+                    strengthContainer.style.display = 'block';
+                    formHeading.textContent = 'Create Your Account 🚀';
+                    forgotLink.style.display = 'none';
+                    submitBtn.querySelector('span').textContent = 'Create My Free Account';
+                    submitBtn.querySelector('i').className = 'fa-solid fa-user-plus';
+                }
+            }
+
+            // Password strength checker
+            const passwordInput = document.getElementById('password-input');
+            const strengthFill = document.getElementById('password-strength-fill');
+            const strengthLabel = document.getElementById('password-strength-label');
+
+            passwordInput.addEventListener('input', () => {
+                if (activeTab !== 'signup') return;
+                const val = passwordInput.value;
+                let score = 0;
+                
+                if (val.length >= 6) score++;
+                if (val.length >= 10) score++;
+                if (/[A-Z]/.test(val)) score++;
+                if (/[0-9]/.test(val)) score++;
+                if (/[^A-Za-z0-9]/.test(val)) score++;
+
+                const percentage = (score / 5) * 100;
+                strengthFill.style.width = `${percentage}%`;
+
+                if (score <= 1) {
+                    strengthFill.style.backgroundColor = 'var(--danger)';
+                    strengthLabel.textContent = 'Strength: Weak 🔴';
+                } else if (score <= 3) {
+                    strengthFill.style.backgroundColor = 'var(--warning)';
+                    strengthLabel.textContent = 'Strength: Moderate 🟡';
+                } else {
+                    strengthFill.style.backgroundColor = 'var(--success)';
+                    strengthLabel.textContent = 'Strength: Strong 🟢';
+                }
+            });
+
+            // Form Submit handler
+            authForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideAlert();
+                
+                const username = document.getElementById('username-input').value.trim();
+                const password = passwordInput.value;
+
+                // Disable submit button during load
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.7';
+
+                try {
+                    if (activeTab === 'login') {
+                        // Submit Login
+                        const res = await Api.login(username, password);
+                        showAlert('Success', 'Login successful! Redirecting...', 'success');
+                        
+                        localStorage.setItem('username', res.username);
+                        localStorage.setItem('full_name', res.full_name);
+                        
+                        setTimeout(() => {
+                            window.location.href = '/dashboard';
+                        }, 500);
+                    } else {
+                        // Submit Signup
+                        const fullName = document.getElementById('fullname-input').value.trim();
+                        const email = document.getElementById('email-input').value.trim();
+
+                        if (!fullName) {
+                            throw new Error('Please enter your full name.');
+                        }
+                        if (password.length < 6) {
+                            throw new Error('Password must be at least 6 characters.');
+                        }
+
+                        const res = await Api.register(username, password, fullName);
+                        showAlert('Account Created!', 'Please sign in to continue.', 'success');
+                        switchTab('login');
+                    }
+                } catch (error) {
+                    showAlert('Error', error.message, 'danger');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                }
+            });
+
+            function showAlert(title, message, type) {
+                alertBox.className = type === 'success' ? 'badge-green' : 'badge-red';
+                alertBox.style.padding = '12px 16px';
+                alertBox.style.display = 'block';
+                alertBox.innerHTML = `<strong>${title}:</strong> ${message}`;
+            }
+
+            function hideAlert() {
+                alertBox.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
