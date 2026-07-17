@@ -68,7 +68,12 @@
                     <label class="form-label" for="password-input" style="margin-bottom: 0;"><i class="fa-solid fa-lock" style="color: var(--primary-blue); margin-right: 8px;"></i> Password</label>
                     <a href="#" style="font-size: 12px; color: var(--primary-blue); font-weight: 600; display: inline-block;" id="forgot-password-link">Forgot?</a>
                 </div>
-                <input class="form-control" type="password" id="password-input" placeholder="Enter your password" required>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <input class="form-control" type="password" id="password-input" placeholder="Enter your password" required style="padding-right: 44px;">
+                    <button type="button" id="toggle-password-btn" style="position: absolute; right: 12px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 15px; padding: 4px; display: flex; align-items: center; justify-content: center; transition: var(--transition);" title="Toggle password visibility">
+                        <i class="fa-solid fa-eye" id="toggle-password-icon"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Password Strength Bar (Join only) -->
@@ -148,10 +153,21 @@
                 }
             }
 
-            // Password strength checker
+            // Password input & visibility toggle
             const passwordInput = document.getElementById('password-input');
+            const togglePasswordBtn = document.getElementById('toggle-password-btn');
+            const togglePasswordIcon = document.getElementById('toggle-password-icon');
             const strengthFill = document.getElementById('password-strength-fill');
             const strengthLabel = document.getElementById('password-strength-label');
+
+            if (togglePasswordBtn && passwordInput) {
+                togglePasswordBtn.addEventListener('click', () => {
+                    const isPassword = passwordInput.getAttribute('type') === 'password';
+                    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                    togglePasswordIcon.className = isPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+                    togglePasswordBtn.style.color = isPassword ? 'var(--primary-blue)' : 'var(--text-muted)';
+                });
+            }
 
             passwordInput.addEventListener('input', () => {
                 if (activeTab !== 'signup') return;
