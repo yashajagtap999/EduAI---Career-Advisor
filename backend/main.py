@@ -777,9 +777,9 @@ def get_analytics():
     return FileResponse(os.path.join(base_dir, "frontend", "analytics.html"))
 
 # Mount Static Directories
-app.mount("/css", StaticFiles(directory=os.path.join(base_dir, "css")), name="css")
-app.mount("/js", StaticFiles(directory=os.path.join(base_dir, "js")), name="js")
-app.mount("/assets", StaticFiles(directory=os.path.join(base_dir, "assets")), name="assets")
+app.mount("/css", StaticFiles(directory=os.path.join(base_dir, "frontend", "css")), name="css")
+app.mount("/js", StaticFiles(directory=os.path.join(base_dir, "frontend", "js")), name="js")
+app.mount("/assets", StaticFiles(directory=os.path.join(base_dir, "frontend", "assets")), name="assets")
 
 # Run using uvicorn if script invoked directly
 if __name__ == "__main__":
