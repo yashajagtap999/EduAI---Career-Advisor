@@ -1,8 +1,11 @@
-import spacy
 import re
 
-# Load NLP model
-nlp = spacy.load("en_core_web_sm")
+# Optional NLP model
+try:
+    import spacy
+    nlp = spacy.load("en_core_web_sm")
+except Exception:
+    nlp = None
 
 # Comprehensive Skills Database (Technical, Management, Tools)
 SKILLS_DB = [

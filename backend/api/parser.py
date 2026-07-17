@@ -22,9 +22,9 @@ def extract_text_from_docx(file):
 # Extract text from Images
 def extract_text_from_image(file):
     try:
-        # Tesseract execution path must be specified explicitly on Windows
-        # Ensure the user installed it to the typical location
-        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+        import os
+        if os.name == 'nt':
+            pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
         
         img = Image.open(file)
         text = pytesseract.image_to_string(img)
