@@ -3,7 +3,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Session check & Page Guard
     const session = await Api.getSession().catch(() => ({ logged_in: false }));
-    const pathname = window.location.pathname;
+    const rawPath = window.location.pathname;
+    const pathname = rawPath.endsWith('.html') ? rawPath.slice(0, -5) : rawPath;
 
     const privateRoutes = ['/dashboard', '/roadmap', '/internships', '/resume', '/chatbot', '/college-finder', '/analytics', '/profile'];
 
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('username', session.username);
         localStorage.setItem('full_name', session.full_name);
 
-        if (pathname === '/' || pathname === '/index.html') {
+        if (pathname === '/' || pathname === '/index') {
             updateLandingNavUI(session);
         } else if (pathname === '/login') {
             updateLoginNavUI(session);
@@ -101,7 +102,8 @@ function injectSidebar(session) {
     const sidebarContainer = document.getElementById('sidebar-container');
     if (!sidebarContainer) return;
 
-    const pathname = window.location.pathname;
+    const rawPath = window.location.pathname;
+    const pathname = rawPath.endsWith('.html') ? rawPath.slice(0, -5) : rawPath;
     const fullName = session.full_name || localStorage.getItem('full_name') || 'Student';
     const username = session.username || localStorage.getItem('username') || 'user';
     const initial = fullName.charAt(0).toUpperCase();

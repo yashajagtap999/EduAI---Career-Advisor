@@ -1,7 +1,8 @@
 /* ── INTERNSHIP RECOMMENDATION ENGINE CONTROLLER ── */
 
 document.addEventListener('DOMContentLoaded', async () => {
-    if (window.location.pathname !== '/internships') return;
+    const pathname = window.location.pathname.replace(/\.html$/, '');
+    if (pathname !== '/internships') return;
 
     const form = document.getElementById('internship-form');
     const branchSelect = document.getElementById('internship-branch');

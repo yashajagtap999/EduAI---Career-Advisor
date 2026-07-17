@@ -2,7 +2,8 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Make sure we are on dashboard page
-    if (window.location.pathname !== '/dashboard') return;
+    const pathname = window.location.pathname.replace(/\.html$/, '');
+    if (pathname !== '/dashboard') return;
 
     try {
         // 1. Fetch dashboard metrics

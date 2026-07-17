@@ -1,0 +1,15 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/roadmap", "destination": "/roadmap.html" },
+    { "source": "/internships", "destination": "/internships.html" },
+    { "source": "/resume", "destination": "/resume.html" },
+    { "source": "/chatbot", "destination": "/chatbot.html" },
+    { "source": "/college-finder", "destination": "/college-finder.html" },
+    { "source": "/analytics", "destination": "/analytics.html" },
+    { "source": "/profile", "destination": "/profile.html" }
+  ]
+}

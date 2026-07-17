@@ -1,7 +1,8 @@
 /* ── AI ROADMAP CONTROLLER ── */
 
 document.addEventListener('DOMContentLoaded', async () => {
-    if (window.location.pathname !== '/roadmap') return;
+    const pathname = window.location.pathname.replace(/\.html$/, '');
+    if (pathname !== '/roadmap') return;
 
     try {
         // Fetch stats to default the dropdown to predicted role if user scanned
